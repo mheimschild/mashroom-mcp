@@ -1,7 +1,7 @@
 {
   "name": "mashroom-mcp-services",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
   "author": "Milan Heimschild",
   "license": "MIT",
   "repository": {
