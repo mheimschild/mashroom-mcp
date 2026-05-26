@@ -1,0 +1,104 @@
+{
+  "$schema": "https://www.mashroom-server.com/schemas/mashroom-server-config.json",
+  "name": "Mashroom MCP Server",
+  "port": 5051,
+  "enableHttp2": false,
+  "externalPluginConfigFileNames": ["mashroom"],
+  "pluginPackageFolders": [
+    {
+      "path": "../mashroom-mcp-tools-loader",
+      "devMode": true
+    },
+    {
+      "path": "../mashroom-mcp-tool-plugins",
+      "devMode": true
+    },
+    {
+      "path": "../mashroom-mcp-tool-metrics",
+      "devMode": true
+    },
+    {
+      "path": "../mashroom-mcp-services",
+      "devMode": true
+    },
+    {
+      "path": "../mashroom-mcp-portal-chat-app",
+      "devMode": true
+    },
+    {
+      "path": "../mashroom-mcp-chat-api",
+      "devMode": true
+    },
+    {
+      "path": "./node_modules/@mashroom/mashroom-portal",
+      "devMode": false
+    },
+    {
+      "path": "./node_modules/@mashroom/mashroom-storage",
+      "devMode": false
+    },
+    {
+      "path": "./node_modules/@mashroom/mashroom-security",
+      "devMode": false
+    },
+    {
+      "path": "./node_modules/@mashroom/mashroom-i18n",
+      "devMode": false
+    },
+    {
+      "path": "./node_modules/@mashroom/mashroom-http-proxy",
+      "devMode": false
+    },
+    {
+      "path": "./node_modules/@mashroom/mashroom-session",
+      "devMode": false
+    },
+    {
+      "path": "./node_modules/@mashroom/mashroom-storage-provider-filestore",
+      "devMode": false
+    },
+    {
+      "path": "./node_modules/@mashroom/mashroom-security-provider-simple",
+      "devMode": false
+    },
+    {
+      "path": "./node_modules/@mashroom/mashroom-security-default-login-webapp",
+      "devMode": false
+    },
+    {
+      "path": "./node_modules/@mashroom/mashroom-portal-admin-app",
+      "devMode": false
+    },
+    {
+      "path": "./node_modules/@mashroom/mashroom-portal-default-theme",
+      "devMode": false
+    },
+    {
+      "path": "./node_modules/@mashroom/mashroom-browser-cache",
+      "devMode": false
+    },
+    {
+      "path": "./node_modules/@mashroom/mashroom-portal-default-layouts",
+      "devMode": false
+    },
+    {
+      "path": "./node_modules/@mashroom/mashroom-portal-sandbox-app",
+      "devMode": false
+    },
+    {
+      "path": "./node_modules/@mashroom/mashroom-portal-app-gallery-app",
+      "devMode": false
+    },
+    {
+      "path": "./node_modules/@mashroom/mashroom-monitoring-metrics-collector",
+      "devMode": false
+    }
+  ],
+  "plugins": {
+    "Mashroom Security Simple Provider": {
+        "users": "./users.json",
+        "loginPage": "/login",
+        "authenticationTimeoutSec": 300
+    }
+  }
+}

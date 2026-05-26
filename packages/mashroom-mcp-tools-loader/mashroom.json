@@ -1,0 +1,16 @@
+{
+  "$schema": "https://www.mashroom-server.com/schemas/mashroom-plugins.json",
+  "devModeBuildScript": "build",
+  "plugins": [
+    {
+      "name": "Mashroom MCP Tool Plugin Loader",
+      "type": "plugin-loader",
+      "loads": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/index.js",
+      "requires": ["Mashroom MCP Tool Registry"],
+      "defaultConfig": {
+        "category": "default"
+      }
+    }
+  ]
+}

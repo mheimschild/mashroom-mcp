@@ -1,0 +1,5 @@
+biome.json
+/src/*
+rs*.ts
+tsconfig.json
+A*.md

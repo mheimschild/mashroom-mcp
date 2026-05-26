@@ -1,0 +1,1 @@
+import "@mashroom/mashroom/dist/server";

@@ -1,0 +1,27 @@
+{
+  "name": "mashroom-mcp-tool-plugins",
+  "version": "1.0.0",
+  "private": true,
+  "author": "Milan Heimschild",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/mheimschild/mashroom-mcp"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "rsbuild build",
+    "check": "biome check --write",
+    "format": "biome format --write"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.8",
+    "@mashroom/mashroom": "^2.9.4",
+    "@mashroom/mashroom-portal": "^2.9.4",
+    "@rsbuild/core": "^1.7.1",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "zod": "^4.3.6"
+  }
+}

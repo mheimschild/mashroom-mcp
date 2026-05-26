@@ -1,0 +1,35 @@
+{
+  "$schema": "https://www.mashroom-server.com/schemas/mashroom-security-acl.json",
+  "/mcp/**": {
+    "*": {
+      "allow": "any"
+    }
+  },
+  "/chat/**": {
+    "*": {
+      "allow": {
+        "roles": ["Authenticated"]
+      }
+    }
+  },
+  "/api/**": {
+    "*": {
+      "allow": "any"
+    }
+  },
+  "/portal/**": {
+      "*": {
+          "allow": {
+              "roles": ["Authenticated"]
+          }
+      }
+  },
+  "/mashroom/**": {
+      "*": {
+          "allow": {
+              "roles": ["Authenticated"],
+              "ips": ["127.0.0.1", "::1"]
+          }
+      }
+  }
+}

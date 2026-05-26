@@ -1,0 +1,27 @@
+{
+  "$schema": "https://www.mashroom-server.com/schemas/mashroom-plugins.json",
+  "devModeBuildScript": "build",
+  "plugins": [
+    {
+      "name": "Mashroom MCP API",
+      "type": "api",
+      "bootstrap": "./dist/index.js",
+      "requires": ["Mashroom Portal WebApp"],
+      "defaultConfig": {
+        "path": "/mcp",
+        "sessionTTL": 1800,
+        "rateLimitMaxRequests": 120,
+        "rateLimitWindowMs": 60000,
+        "allowedOrigins": []
+      }
+    },
+    {
+      "name": "Mashroom MCP Tool Registry",
+      "type": "services",
+      "namespace": "mcp",
+      "bootstrap": "./dist/mcp-tool-registry.js",
+      "requires": ["Mashroom MCP API"],
+      "defaultConfig": {}
+    }
+  ]
+}

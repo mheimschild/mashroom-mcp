@@ -1,0 +1,40 @@
+{
+  "name": "mashroom-mcp-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx starter.ts"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.2",
+    "@mashroom/mashroom": "^2.9.4",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "author": "Milan Heimschild",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/mheimschild/mashroom-mcp"
+  },
+  "dependencies": {
+    "@mashroom/mashroom-browser-cache": "^2.9.4",
+    "@mashroom/mashroom-http-proxy": "^2.9.4",
+    "@mashroom/mashroom-i18n": "^2.9.4",
+    "@mashroom/mashroom-monitoring-metrics-collector": "^2.9.4",
+    "@mashroom/mashroom-portal": "^2.9.4",
+    "@mashroom/mashroom-portal-admin-app": "^2.9.4",
+    "@mashroom/mashroom-portal-app-gallery-app": "^2.9.4",
+    "@mashroom/mashroom-portal-default-layouts": "^2.9.4",
+    "@mashroom/mashroom-portal-default-theme": "^2.9.4",
+    "@mashroom/mashroom-portal-sandbox-app": "^2.9.4",
+    "@mashroom/mashroom-security": "^2.9.4",
+    "@mashroom/mashroom-security-default-login-webapp": "^2.9.4",
+    "@mashroom/mashroom-security-provider-simple": "^2.9.4",
+    "@mashroom/mashroom-session": "^2.9.4",
+    "@mashroom/mashroom-storage": "^2.9.4",
+    "@mashroom/mashroom-storage-provider-filestore": "^2.9.4",
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "zod": "^4.3.6"
+  }
+}

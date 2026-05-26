@@ -1,0 +1,345 @@
+{
+  "$schema": "https://www.mashroom-server.com/schemas/mashroom-plugins.json",
+  "devModeBuildScript": "build",
+  "plugins": [
+    {
+      "name": "portal_apps",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/listing-tools.js",
+      "requires": [
+        "Mashroom Portal WebApp"
+      ],
+      "defaultConfig": {
+        "title": "portal_apps",
+        "description": "List all registered Portal UI widget apps (apps that render inside portal pages). These are portal-specific apps, NOT server plugins \u2014 use \"list_plugins\" for all Mashroom server plugins. Returns app name, description, version, category.",
+        "category": "portal-service",
+        "access": {
+          "type": "read"
+        }
+      }
+    },
+    {
+      "name": "portal_themes",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/listing-tools.js",
+      "requires": [
+        "Mashroom Portal WebApp"
+      ],
+      "defaultConfig": {
+        "title": "portal_themes",
+        "description": "List all registered portal THEMES (visual styling templates). NOT apps or sites. Returns theme name, description, version.",
+        "category": "portal-service",
+        "access": {
+          "type": "read"
+        }
+      }
+    },
+    {
+      "name": "portal_layouts",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/listing-tools.js",
+      "requires": [
+        "Mashroom Portal WebApp"
+      ],
+      "defaultConfig": {
+        "title": "portal_layouts",
+        "description": "List all registered portal LAYOUTS (page structure templates). NOT themes or apps. Returns layout name, layoutId, description.",
+        "category": "portal-service",
+        "access": {
+          "type": "read"
+        }
+      }
+    },
+    {
+      "name": "page_enhancements",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/listing-tools.js",
+      "requires": [
+        "Mashroom Portal WebApp"
+      ],
+      "defaultConfig": {
+        "title": "page_enhancements",
+        "description": "List all registered portal page enhancement plugins (global JS/CSS injectors that modify every page). NOT plugin loaders \u2014 use \"list_plugin_loaders\" for server plugin loaders. Returns enhancement name, description, version, order.",
+        "category": "portal-service",
+        "access": {
+          "type": "read"
+        }
+      }
+    },
+    {
+      "name": "app_enhancements",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/listing-tools.js",
+      "requires": [
+        "Mashroom Portal WebApp"
+      ],
+      "defaultConfig": {
+        "title": "app_enhancements",
+        "description": "List all registered portal app enhancement plugins (custom client services / setup enhancers for portal apps). NOT plugin loaders \u2014 use \"list_plugin_loaders\" for server plugin loaders. Returns enhancement name and description.",
+        "category": "portal-service",
+        "access": {
+          "type": "read"
+        }
+      }
+    },
+    {
+      "name": "portal_sites",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/site-tools.js",
+      "requires": [
+        "Mashroom Portal WebApp"
+      ],
+      "defaultConfig": {
+        "title": "portal_sites",
+        "description": "List all registered SITEs (websites/paths in the portal). NOT apps \u2014 use \"portal_apps\" for apps. Returns site path, title, page count, defaultTheme, defaultLayout.",
+        "category": "portal-service",
+        "access": {
+          "type": "read"
+        }
+      }
+    },
+    {
+      "name": "get_site",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/site-tools.js",
+      "requires": [
+        "Mashroom Portal WebApp"
+      ],
+      "defaultConfig": {
+        "title": "get_site",
+        "description": "Get full details of a single site by its ID, including pages tree, theme, layout and virtual hosts.",
+        "category": "portal-service",
+        "access": {
+          "type": "read"
+        }
+      }
+    },
+    {
+      "name": "update_site",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/site-tools.js",
+      "requires": [
+        "Mashroom Portal WebApp"
+      ],
+      "defaultConfig": {
+        "title": "update_site",
+        "description": "Update an existing site. At minimum provide siteId. Optional fields to update: title, path, defaultTheme, defaultLayout.",
+        "category": "portal-service",
+        "access": {
+          "type": "write",
+          "roles": [
+            "Administrator"
+          ]
+        }
+      }
+    },
+    {
+      "name": "insert_site",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/site-tools.js",
+      "requires": [
+        "Mashroom Portal WebApp"
+      ],
+      "defaultConfig": {
+        "title": "insert_site",
+        "description": "Create a new site with the given ID, title and path.",
+        "category": "portal-service",
+        "access": {
+          "type": "admin",
+          "roles": [
+            "Administrator"
+          ]
+        }
+      }
+    },
+    {
+      "name": "site_pages",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/page-tools.js",
+      "requires": [
+        "Mashroom Portal WebApp"
+      ],
+      "defaultConfig": {
+        "title": "site_pages",
+        "description": "List all PAGES within a specific SITE. Use this to see what pages belong to a site after listing sites with \"portal_sites\".",
+        "category": "portal-service",
+        "access": {
+          "type": "read"
+        }
+      }
+    },
+    {
+      "name": "get_page",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/page-tools.js",
+      "requires": [
+        "Mashroom Portal WebApp"
+      ],
+      "defaultConfig": {
+        "title": "get_page",
+        "description": "Get full details of a single page by its ID, including theme override, layout, extra CSS, keywords and assigned portal apps.",
+        "category": "portal-service",
+        "access": {
+          "type": "read"
+        }
+      }
+    },
+    {
+      "name": "update_page",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/page-tools.js",
+      "requires": [
+        "Mashroom Portal WebApp"
+      ],
+      "defaultConfig": {
+        "title": "update_page",
+        "description": "Update properties of an existing page. Provide pageId and at least one field to change.",
+        "category": "portal-service",
+        "access": {
+          "type": "write",
+          "roles": [
+            "Administrator"
+          ]
+        }
+      }
+    },
+    {
+      "name": "insert_page",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/page-tools.js",
+      "requires": [
+        "Mashroom Portal WebApp"
+      ],
+      "defaultConfig": {
+        "title": "insert_page",
+        "description": "Create a new page and add it to an existing site. Requires sitePath so the page is visible under that site.",
+        "category": "portal-service",
+        "access": {
+          "type": "admin",
+          "roles": [
+            "Administrator"
+          ]
+        }
+      }
+    },
+    {
+      "name": "get_app_instance",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/app-instance-tools.js",
+      "requires": [
+        "Mashroom Portal WebApp"
+      ],
+      "defaultConfig": {
+        "title": "get_app_instance",
+        "description": "Get the configuration of a portal app instance by plugin name and optional instance ID.",
+        "category": "portal-service",
+        "access": {
+          "type": "read"
+        }
+      }
+    },
+    {
+      "name": "update_app_instance",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/app-instance-tools.js",
+      "requires": [
+        "Mashroom Portal WebApp"
+      ],
+      "defaultConfig": {
+        "title": "update_app_instance",
+        "description": "Update the configuration of an existing portal app instance.",
+        "category": "portal-service",
+        "access": {
+          "type": "write",
+          "roles": [
+            "Administrator"
+          ]
+        }
+      }
+    },
+    {
+      "name": "list_plugins",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/plugin-tools.js",
+      "requires": [],
+      "defaultConfig": {
+        "title": "list_plugins",
+        "description": "List ALL Mashroom server plugins (web-apps, api plugins, middleware, services, storage, plugin-loaders). Use this to see every loaded plugin in the server. NOT portal apps \u2014 use \"portal_apps\" for portal UI widget apps. Returns plugin name, type (e.g. web-app, api, middleware), status (pending/loaded/error), and package info.",
+        "category": "plugin-service",
+        "access": {
+          "type": "read"
+        }
+      }
+    },
+    {
+      "name": "get_plugin",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/plugin-tools.js",
+      "requires": [],
+      "defaultConfig": {
+        "title": "get_plugin",
+        "description": "Get full details of a single Mashroom server plugin by its exact name. Shows type, status (pending/loaded/error), config JSON, tags, error message and package info. Use this after finding a plugin with \"list_plugins\".",
+        "category": "plugin-service",
+        "access": {
+          "type": "read"
+        }
+      }
+    },
+    {
+      "name": "list_plugin_packages",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/plugin-tools.js",
+      "requires": [],
+      "defaultConfig": {
+        "title": "list_plugin_packages",
+        "description": "List all npm plugin packages currently loaded in the Mashroom server. Each package can contain one or more plugins. Returns package name, version, status, and number of contained plugins. NOT portal apps \u2014 use \"portal_apps\" for UI widgets.",
+        "category": "plugin-service",
+        "access": {
+          "type": "read"
+        }
+      }
+    },
+    {
+      "name": "get_plugin_package",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/plugin-tools.js",
+      "requires": [],
+      "defaultConfig": {
+        "title": "get_plugin_package",
+        "description": "Get full details of a single npm plugin package by its exact package name. Shows version, author, license, homepage, status, path, and all contained plugin definitions. Use this after finding a package with \"list_plugin_packages\".",
+        "category": "plugin-service",
+        "access": {
+          "type": "read"
+        }
+      }
+    },
+    {
+      "name": "list_plugin_loaders",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/plugin-tools.js",
+      "requires": [],
+      "defaultConfig": {
+        "title": "list_plugin_loaders",
+        "description": "List all registered Mashroom plugin loaders. Each loader handles a specific plugin type (e.g. web-app, api, middleware, services). Returns the plugin type and the loader name for each. NOT apps, NOT enhancements \u2014 use \"portal_apps\" for UI widgets or \"page_enhancements\"/\"app_enhancements\" for enhancement plugins.",
+        "category": "plugin-service",
+        "access": {
+          "type": "read"
+        }
+      }
+    },
+    {
+      "name": "plugins_by_type",
+      "type": "mashroom-mcp-tool-plugin",
+      "bootstrap": "./dist/plugin-tools.js",
+      "requires": [],
+      "defaultConfig": {
+        "title": "plugins_by_type",
+        "description": "List all Mashroom server plugins filtered by a specific plugin type. Common types: web-app, api, middleware, services, storage, plugin-loader. Returns matching plugin names, statuses and package info. Use this to narrow down the full plugin list from \"list_plugins\".",
+        "category": "plugin-service",
+        "access": {
+          "type": "read"
+        }
+      }
+    }
+  ]
+}
