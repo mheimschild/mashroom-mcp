@@ -5,34 +5,34 @@ A **Mashroom Server** plugin-based project that exposes [Mashroom Portal](https:
 ## Architecture
 
 ```
-┌──────────────┐     ┌──────────────────────┐     ┌──────────────────┐
+┌───────────────┐     ┌─────────────────────────┐     ┌──────────────────┐
 │  MCP Client   │────▶│  mashroom-mcp-services  │────▶│  Mashroom Portal │
 │  (LLM Agent)  │     │  /mcp endpoint          │     │  Service API     │
-└──────────────┘     └────────┬─────────────┘     └──────────────────┘
+└───────────────┘     └────────┬────────────────┘     └──────────────────┘
                               │
-                    ┌─────────▼────────────────┐
-                    │  mashroom-mcp-tools-loader    │  loads "mashroom-mcp-tool-plugin"
-                    │  (plugin-loader)              │  type plugins from:
-                    └─────────┬────────────────┘    │  - mashroom-mcp-tool-plugins/
-                              │                     │  - mashroom-mcp-tool-metrics/
-                    ┌─────────▼────────────────┐
-                    │  mashroom-mcp-tool-plugins   │  21 MCP tool definitions:
+                    ┌─────────▼───────────────────┐
+                    │  mashroom-mcp-tools-loader  │  loads "mashroom-mcp-tool-plugin"
+                    │  (plugin-loader)            │  type plugins from:
+                    └─────────┬───────────────────┘    │  - mashroom-mcp-tool-plugins/
+                              │                        │  - mashroom-mcp-tool-metrics/
+                    ┌─────────▼───────────────────┐
+                    │  mashroom-mcp-tool-plugins  │  21 MCP tool definitions:
                     │                             │  sites, pages, apps, plugins…
-                    ├────────────────────────────┤
+                    ├─────────────────────────────┤
                     │  mashroom-mcp-tool-metrics  │  5 MCP metric tools:
                     │                             │  list/get/search metrics
                     └─────────────────────────────┘
 
-┌──────────────┐     ┌──────────────────────┐     ┌──────────────────┐
-│  Web Browser  │────▶│  mashroom-mcp-portal-chat-app  │────▶│ mashroom-mcp-chat-api   │
-│  (Chat UI)    │     │  /portal page           │     │  /chat endpoint   │
-└──────────────┘     └──────────────────────┘     │  (LangChain+Ollama)│
-                                                   └────────┬──────────┘
-                                                            │
-                                                   ┌────────▼─────────┐
-                                                   │    mashroom-mcp-services   │
-                                                   │      /mcp         │
-                                                   └──────────────────┘
+┌───────────────┐     ┌────────────────────────────────┐     ┌───────────────────────┐
+│  Web Browser  │────▶│  mashroom-mcp-portal-chat-app  │────▶│ mashroom-mcp-chat-api │
+│  (Chat UI)    │     │  /portal page                  │     │  /chat endpoint       │
+└───────────────┘     └────────────────────────────────┘     │  (LangChain+Ollama)   │
+                                                             └────────────┬──────────┘
+                                                                          │
+                                                                 ┌────────▼──────────────────┐
+                                                                 │    mashroom-mcp-services  │
+                                                                 │      /mcp                 │
+                                                                 └───────────────────────────┘
 ```
 
 ## Tool Propagation Flow
