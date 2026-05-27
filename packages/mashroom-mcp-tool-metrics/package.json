@@ -1,17 +1,23 @@
 {
   "name": "mashroom-mcp-tool-metrics",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
   "author": "Milan Heimschild",
   "license": "MIT",
   "repository": {
     "url": "https://github.com/mheimschild/mashroom-mcp"
   },
   "type": "module",
+  "files": [
+    "dist/**",
+    "mashroom.json"
+  ],
   "scripts": {
     "build": "rsbuild build",
     "check": "biome check --write",
-    "format": "biome format --write"
+    "type-check": "tsc --noEmit",
+    "format": "biome format --write",
+    "prepublishOnly": "npm run check && npm run type-check"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.8",

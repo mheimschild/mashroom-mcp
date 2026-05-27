@@ -89,7 +89,8 @@ On error, return the same shape with a descriptive error message in `text`. Neve
 ## Build
 
 ```bash
-npm run build    # Rsbuild → dist/*.js (one file per tool bundle)
-npm run check    # Biome lint + fix
-npm run format   # Biome format
+npm run build       # Rsbuild → dist/*.js (one file per tool bundle)
+npm run check       # Biome lint + fix
+npm run type-check  # TypeScript type checking
+npm run format      # Biome format
 ```

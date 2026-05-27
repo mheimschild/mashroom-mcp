@@ -61,7 +61,8 @@ All metrics tools are **read-only** (`access.type: "read"`) — any authenticate
 ## Build
 
 ```bash
-npm run build    # Rsbuild → dist/metrics-tools.js
-npm run check    # Biome lint + fix
-npm run format   # Biome format
+npm run build       # Rsbuild → dist/metrics-tools.js
+npm run check       # Biome lint + fix
+npm run type-check  # TypeScript type checking
+npm run format      # Biome format
 ```
