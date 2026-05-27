@@ -6,9 +6,7 @@
       "name": "portal_apps",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/listing-tools.js",
-      "requires": [
-        "Mashroom Portal WebApp"
-      ],
+      "requires": ["Mashroom Portal WebApp"],
       "defaultConfig": {
         "title": "portal_apps",
         "description": "List all registered Portal UI widget apps (apps that render inside portal pages). These are portal-specific apps, NOT server plugins \u2014 use \"list_plugins\" for all Mashroom server plugins. Returns app name, description, version, category.",
@@ -22,9 +20,7 @@
       "name": "portal_themes",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/listing-tools.js",
-      "requires": [
-        "Mashroom Portal WebApp"
-      ],
+      "requires": ["Mashroom Portal WebApp"],
       "defaultConfig": {
         "title": "portal_themes",
         "description": "List all registered portal THEMES (visual styling templates). NOT apps or sites. Returns theme name, description, version.",
@@ -38,9 +34,7 @@
       "name": "portal_layouts",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/listing-tools.js",
-      "requires": [
-        "Mashroom Portal WebApp"
-      ],
+      "requires": ["Mashroom Portal WebApp"],
       "defaultConfig": {
         "title": "portal_layouts",
         "description": "List all registered portal LAYOUTS (page structure templates). NOT themes or apps. Returns layout name, layoutId, description.",
@@ -54,9 +48,7 @@
       "name": "page_enhancements",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/listing-tools.js",
-      "requires": [
-        "Mashroom Portal WebApp"
-      ],
+      "requires": ["Mashroom Portal WebApp"],
       "defaultConfig": {
         "title": "page_enhancements",
         "description": "List all registered portal page enhancement plugins (global JS/CSS injectors that modify every page). NOT plugin loaders \u2014 use \"list_plugin_loaders\" for server plugin loaders. Returns enhancement name, description, version, order.",
@@ -70,9 +62,7 @@
       "name": "app_enhancements",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/listing-tools.js",
-      "requires": [
-        "Mashroom Portal WebApp"
-      ],
+      "requires": ["Mashroom Portal WebApp"],
       "defaultConfig": {
         "title": "app_enhancements",
         "description": "List all registered portal app enhancement plugins (custom client services / setup enhancers for portal apps). NOT plugin loaders \u2014 use \"list_plugin_loaders\" for server plugin loaders. Returns enhancement name and description.",
@@ -86,9 +76,7 @@
       "name": "portal_sites",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/site-tools.js",
-      "requires": [
-        "Mashroom Portal WebApp"
-      ],
+      "requires": ["Mashroom Portal WebApp"],
       "defaultConfig": {
         "title": "portal_sites",
         "description": "List all registered SITEs (websites/paths in the portal). NOT apps \u2014 use \"portal_apps\" for apps. Returns site path, title, page count, defaultTheme, defaultLayout.",
@@ -102,9 +90,7 @@
       "name": "get_site",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/site-tools.js",
-      "requires": [
-        "Mashroom Portal WebApp"
-      ],
+      "requires": ["Mashroom Portal WebApp"],
       "defaultConfig": {
         "title": "get_site",
         "description": "Get full details of a single site by its ID, including pages tree, theme, layout and virtual hosts.",
@@ -118,18 +104,14 @@
       "name": "update_site",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/site-tools.js",
-      "requires": [
-        "Mashroom Portal WebApp"
-      ],
+      "requires": ["Mashroom Portal WebApp"],
       "defaultConfig": {
         "title": "update_site",
         "description": "Update an existing site. At minimum provide siteId. Optional fields to update: title, path, defaultTheme, defaultLayout.",
         "category": "portal-service",
         "access": {
           "type": "write",
-          "roles": [
-            "Administrator"
-          ]
+          "roles": ["Administrator"]
         }
       }
     },
@@ -137,18 +119,14 @@
       "name": "insert_site",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/site-tools.js",
-      "requires": [
-        "Mashroom Portal WebApp"
-      ],
+      "requires": ["Mashroom Portal WebApp"],
       "defaultConfig": {
         "title": "insert_site",
         "description": "Create a new site with the given ID, title and path.",
         "category": "portal-service",
         "access": {
           "type": "admin",
-          "roles": [
-            "Administrator"
-          ]
+          "roles": ["Administrator"]
         }
       }
     },
@@ -156,9 +134,7 @@
       "name": "site_pages",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/page-tools.js",
-      "requires": [
-        "Mashroom Portal WebApp"
-      ],
+      "requires": ["Mashroom Portal WebApp"],
       "defaultConfig": {
         "title": "site_pages",
         "description": "List all PAGES within a specific SITE. Use this to see what pages belong to a site after listing sites with \"portal_sites\".",
@@ -172,9 +148,7 @@
       "name": "get_page",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/page-tools.js",
-      "requires": [
-        "Mashroom Portal WebApp"
-      ],
+      "requires": ["Mashroom Portal WebApp"],
       "defaultConfig": {
         "title": "get_page",
         "description": "Get full details of a single page by its ID, including theme override, layout, extra CSS, keywords and assigned portal apps.",
@@ -188,18 +162,14 @@
       "name": "update_page",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/page-tools.js",
-      "requires": [
-        "Mashroom Portal WebApp"
-      ],
+      "requires": ["Mashroom Portal WebApp"],
       "defaultConfig": {
         "title": "update_page",
         "description": "Update properties of an existing page. Provide pageId and at least one field to change.",
         "category": "portal-service",
         "access": {
           "type": "write",
-          "roles": [
-            "Administrator"
-          ]
+          "roles": ["Administrator"]
         }
       }
     },
@@ -207,18 +177,14 @@
       "name": "insert_page",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/page-tools.js",
-      "requires": [
-        "Mashroom Portal WebApp"
-      ],
+      "requires": ["Mashroom Portal WebApp"],
       "defaultConfig": {
         "title": "insert_page",
         "description": "Create a new page and add it to an existing site. Requires sitePath so the page is visible under that site.",
         "category": "portal-service",
         "access": {
           "type": "admin",
-          "roles": [
-            "Administrator"
-          ]
+          "roles": ["Administrator"]
         }
       }
     },
@@ -226,9 +192,7 @@
       "name": "get_app_instance",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/app-instance-tools.js",
-      "requires": [
-        "Mashroom Portal WebApp"
-      ],
+      "requires": ["Mashroom Portal WebApp"],
       "defaultConfig": {
         "title": "get_app_instance",
         "description": "Get the configuration of a portal app instance by plugin name and optional instance ID.",
@@ -242,18 +206,14 @@
       "name": "update_app_instance",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/app-instance-tools.js",
-      "requires": [
-        "Mashroom Portal WebApp"
-      ],
+      "requires": ["Mashroom Portal WebApp"],
       "defaultConfig": {
         "title": "update_app_instance",
         "description": "Update the configuration of an existing portal app instance.",
         "category": "portal-service",
         "access": {
           "type": "write",
-          "roles": [
-            "Administrator"
-          ]
+          "roles": ["Administrator"]
         }
       }
     },

@@ -1,19 +1,32 @@
-import type { MashroomLogger, MashroomPluginContextHolder } from '@mashroom/mashroom/type-definitions';
+import type {
+  MashroomLogger,
+  MashroomPluginContextHolder,
+} from '@mashroom/mashroom/type-definitions';
 import type { MashroomPortalService } from '@mashroom/mashroom-portal/type-definitions';
-import type { MCPToolPluginExport, MCPToolDescriptor, MCPToolConfig } from '../types';
 import { resolveTitle } from '../helpers';
+import type {
+  MCPToolConfig,
+  MCPToolDescriptor,
+  MCPToolPluginExport,
+} from '../types';
 
-function createLogger(contextHolder: MashroomPluginContextHolder): MashroomLogger {
-  return contextHolder.getPluginContext().loggerFactory('mashroom.mcp-tools.listing');
+function createLogger(
+  contextHolder: MashroomPluginContextHolder,
+): MashroomLogger {
+  return contextHolder
+    .getPluginContext()
+    .loggerFactory('mashroom.mcp-tools.listing');
 }
 
-const toolMap = new Map<string, (contextHolder: MashroomPluginContextHolder) => MCPToolDescriptor>();
+const toolMap = new Map<
+  string,
+  (contextHolder: MashroomPluginContextHolder) => MCPToolDescriptor
+>();
 
 // portal_apps
 toolMap.set('portal_apps', (contextHolder) => {
-  const portalService = contextHolder
-    .getPluginContext()
-    .services.portal?.service as MashroomPortalService;
+  const portalService = contextHolder.getPluginContext().services.portal
+    ?.service as MashroomPortalService;
   const log = createLogger(contextHolder);
 
   return {
@@ -21,7 +34,9 @@ toolMap.set('portal_apps', (contextHolder) => {
       log.debug('portal_apps called');
       const apps = portalService.getPortalApps();
       if (apps.length === 0) {
-        return { content: [{ type: 'text', text: 'No portal apps registered.' }] };
+        return {
+          content: [{ type: 'text', text: 'No portal apps registered.' }],
+        };
       }
       const lines = apps.map(
         (app, idx) =>
@@ -41,9 +56,8 @@ toolMap.set('portal_apps', (contextHolder) => {
 
 // portal_themes
 toolMap.set('portal_themes', (contextHolder) => {
-  const portalService = contextHolder
-    .getPluginContext()
-    .services.portal?.service as MashroomPortalService;
+  const portalService = contextHolder.getPluginContext().services.portal
+    ?.service as MashroomPortalService;
   const log = createLogger(contextHolder);
 
   return {
@@ -51,7 +65,9 @@ toolMap.set('portal_themes', (contextHolder) => {
       log.debug('portal_themes called');
       const themes = portalService.getThemes();
       if (themes.length === 0) {
-        return { content: [{ type: 'text', text: 'No portal themes registered.' }] };
+        return {
+          content: [{ type: 'text', text: 'No portal themes registered.' }],
+        };
       }
       const lines = themes.map(
         (t, idx) =>
@@ -71,9 +87,8 @@ toolMap.set('portal_themes', (contextHolder) => {
 
 // portal_layouts
 toolMap.set('portal_layouts', (contextHolder) => {
-  const portalService = contextHolder
-    .getPluginContext()
-    .services.portal?.service as MashroomPortalService;
+  const portalService = contextHolder.getPluginContext().services.portal
+    ?.service as MashroomPortalService;
   const log = createLogger(contextHolder);
 
   return {
@@ -81,7 +96,9 @@ toolMap.set('portal_layouts', (contextHolder) => {
       log.debug('portal_layouts called');
       const layouts = portalService.getLayouts();
       if (layouts.length === 0) {
-        return { content: [{ type: 'text', text: 'No portal layouts registered.' }] };
+        return {
+          content: [{ type: 'text', text: 'No portal layouts registered.' }],
+        };
       }
       const lines = layouts.map(
         (l, idx) =>
@@ -101,9 +118,8 @@ toolMap.set('portal_layouts', (contextHolder) => {
 
 // page_enhancements
 toolMap.set('page_enhancements', (contextHolder) => {
-  const portalService = contextHolder
-    .getPluginContext()
-    .services.portal?.service as MashroomPortalService;
+  const portalService = contextHolder.getPluginContext().services.portal
+    ?.service as MashroomPortalService;
   const log = createLogger(contextHolder);
 
   return {
@@ -111,7 +127,9 @@ toolMap.set('page_enhancements', (contextHolder) => {
       log.debug('page_enhancements called');
       const enhancements = portalService.getPortalPageEnhancements();
       if (enhancements.length === 0) {
-        return { content: [{ type: 'text', text: 'No page enhancements registered.' }] };
+        return {
+          content: [{ type: 'text', text: 'No page enhancements registered.' }],
+        };
       }
       const lines = enhancements.map(
         (e, idx) =>
@@ -131,9 +149,8 @@ toolMap.set('page_enhancements', (contextHolder) => {
 
 // app_enhancements
 toolMap.set('app_enhancements', (contextHolder) => {
-  const portalService = contextHolder
-    .getPluginContext()
-    .services.portal?.service as MashroomPortalService;
+  const portalService = contextHolder.getPluginContext().services.portal
+    ?.service as MashroomPortalService;
   const log = createLogger(contextHolder);
 
   return {
@@ -141,7 +158,9 @@ toolMap.set('app_enhancements', (contextHolder) => {
       log.debug('app_enhancements called');
       const enhancements = portalService.getPortalAppEnhancements();
       if (enhancements.length === 0) {
-        return { content: [{ type: 'text', text: 'No app enhancements registered.' }] };
+        return {
+          content: [{ type: 'text', text: 'No app enhancements registered.' }],
+        };
       }
       const lines = enhancements.map(
         (e, idx) =>
@@ -161,9 +180,8 @@ toolMap.set('app_enhancements', (contextHolder) => {
 
 const toolPlugin: MCPToolPluginExport = {
   getTool(_config, contextHolder) {
-    const portalService = contextHolder
-      .getPluginContext()
-      .services.portal?.service as MashroomPortalService | undefined;
+    const portalService = contextHolder.getPluginContext().services.portal
+      ?.service as MashroomPortalService | undefined;
 
     if (!portalService) {
       throw new Error('Mashroom Portal service not available');

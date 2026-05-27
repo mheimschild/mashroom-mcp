@@ -6,9 +6,7 @@
       "name": "list_metrics",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/metrics-tools.js",
-      "requires": [
-        "Mashroom Monitoring Metrics Collector Services"
-      ],
+      "requires": ["Mashroom Monitoring Metrics Collector Services"],
       "defaultConfig": {
         "title": "list_metrics",
         "description": "List all available metrics collected by the Mashroom metrics collector. Returns metric name, type (counter, gauge, histogram, observable-counter, observable-gauge), description, and data point count.",
@@ -22,9 +20,7 @@
       "name": "get_metric",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/metrics-tools.js",
-      "requires": [
-        "Mashroom Monitoring Metrics Collector Services"
-      ],
+      "requires": ["Mashroom Monitoring Metrics Collector Services"],
       "defaultConfig": {
         "title": "get_metric",
         "description": "Get detailed data for a specific metric by name. Returns all data points with their values, attributes (labels), and timestamps. Use this after finding a metric with \"list_metrics\".",
@@ -38,9 +34,7 @@
       "name": "get_metric_summary",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/metrics-tools.js",
-      "requires": [
-        "Mashroom Monitoring Metrics Collector Services"
-      ],
+      "requires": ["Mashroom Monitoring Metrics Collector Services"],
       "defaultConfig": {
         "title": "get_metric_summary",
         "description": "Get a summary of all current metric values in a compact format. Shows the latest value for each metric with its type and unit. Useful for a quick overview of system health.",
@@ -54,9 +48,7 @@
       "name": "search_metrics",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/metrics-tools.js",
-      "requires": [
-        "Mashroom Monitoring Metrics Collector Services"
-      ],
+      "requires": ["Mashroom Monitoring Metrics Collector Services"],
       "defaultConfig": {
         "title": "search_metrics",
         "description": "Search metrics by name pattern (substring match). Returns matching metric names, types, and descriptions. Use this to find specific metrics when you know part of the name.",
@@ -70,9 +62,7 @@
       "name": "get_metric_histogram_buckets",
       "type": "mashroom-mcp-tool-plugin",
       "bootstrap": "./dist/metrics-tools.js",
-      "requires": [
-        "Mashroom Monitoring Metrics Collector Services"
-      ],
+      "requires": ["Mashroom Monitoring Metrics Collector Services"],
       "defaultConfig": {
         "title": "get_metric_histogram_buckets",
         "description": "Get histogram bucket details for a specific metric. Shows bucket boundaries, counts, sum, min, and max values. Only works for histogram-type metrics.",

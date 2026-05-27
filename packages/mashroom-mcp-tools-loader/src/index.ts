@@ -16,7 +16,7 @@ const bootstrap: MashroomPluginLoaderPluginBootstrapFunction = async (
   // (enforced by the "requires" in mashroom.json).
   try {
     const services = contextHolder.getPluginContext().services;
-    const registryServices = (services as Record<string, any>)['mcp'];
+    const registryServices = (services as Record<string, any>).mcp;
     if (registryServices?.mcpApi) {
       loader.setRegistrationService(registryServices.mcpApi);
       logger.info('Connected to MCP tool registration service');

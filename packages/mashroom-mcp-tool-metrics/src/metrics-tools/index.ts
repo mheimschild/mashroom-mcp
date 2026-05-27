@@ -1,11 +1,26 @@
-import type { MashroomLogger, MashroomPluginContextHolder } from '@mashroom/mashroom/type-definitions';
-import type { ResourceMetrics, MetricData, DataPoint } from '@opentelemetry/sdk-metrics';
+import type {
+  MashroomLogger,
+  MashroomPluginContextHolder,
+} from '@mashroom/mashroom/type-definitions';
+import type {
+  DataPoint,
+  MetricData,
+  ResourceMetrics,
+} from '@opentelemetry/sdk-metrics';
 import type { Histogram } from '@opentelemetry/sdk-metrics/build/esm/aggregator/types';
 import z from 'zod';
-import type { MCPToolPluginExport, MCPToolDescriptor, MCPToolConfig } from '../types';
+import type {
+  MCPToolConfig,
+  MCPToolDescriptor,
+  MCPToolPluginExport,
+} from '../types';
 
-function createLogger(contextHolder: MashroomPluginContextHolder): MashroomLogger {
-  return contextHolder.getPluginContext().loggerFactory('mashroom.mcp-tools.metrics');
+function createLogger(
+  contextHolder: MashroomPluginContextHolder,
+): MashroomLogger {
+  return contextHolder
+    .getPluginContext()
+    .loggerFactory('mashroom.mcp-tools.metrics');
 }
 
 // ---------------------------------------------------------------------------
@@ -14,15 +29,17 @@ function createLogger(contextHolder: MashroomPluginContextHolder): MashroomLogge
 
 let _metricsWired = false;
 
-async function wireMetricsService(contextHolder: MashroomPluginContextHolder): Promise<void> {
+async function wireMetricsService(
+  contextHolder: MashroomPluginContextHolder,
+): Promise<void> {
   if (_metricsWired) return;
   _metricsWired = true;
 
   const log = createLogger(contextHolder);
   try {
     const services = contextHolder.getPluginContext().services;
-    const metricsService = (services as Record<string, any>)['metrics']?.service;
-    const mcpApi = (services as Record<string, any>)['mcp']?.mcpApi;
+    const metricsService = (services as Record<string, any>).metrics?.service;
+    const mcpApi = (services as Record<string, any>).mcp?.mcpApi;
 
     if (metricsService && mcpApi?.setMetricsService) {
       await mcpApi.setMetricsService(metricsService);
@@ -55,11 +72,16 @@ type MetricEntry = {
 
 function getDataPointTypeName(type: number): string {
   switch (type) {
-    case 0: return 'histogram';
-    case 1: return 'exponential-histogram';
-    case 2: return 'gauge';
-    case 3: return 'sum';
-    default: return `unknown(${type})`;
+    case 0:
+      return 'histogram';
+    case 1:
+      return 'exponential-histogram';
+    case 2:
+      return 'gauge';
+    case 3:
+      return 'sum';
+    default:
+      return `unknown(${type})`;
   }
 }
 
@@ -113,7 +135,9 @@ function formatHistogramValue(h: Histogram): string {
 }
 
 function formatAttributes(attributes: Record<string, any>): string {
-  const entries = Object.entries(attributes).filter(([, v]) => v !== undefined && v !== null);
+  const entries = Object.entries(attributes).filter(
+    ([, v]) => v !== undefined && v !== null,
+  );
   if (entries.length === 0) return '';
   return entries.map(([k, v]) => `${k}=${v}`).join(', ');
 }
@@ -137,7 +161,10 @@ function buildMetricsList(resourceMetrics: ResourceMetrics): MetricEntry[] {
   return entries;
 }
 
-function findMetric(resourceMetrics: ResourceMetrics, name: string): MetricData | null {
+function findMetric(
+  resourceMetrics: ResourceMetrics,
+  name: string,
+): MetricData | null {
   for (const scopeMetrics of resourceMetrics.scopeMetrics) {
     for (const metricData of scopeMetrics.metrics) {
       if (metricData.descriptor.name === name) {
@@ -156,15 +183,23 @@ type MetricsCollectorService = {
   getOpenTelemetryResourceMetrics(): Promise<ResourceMetrics>;
 };
 
-function getService(contextHolder: MashroomPluginContextHolder): MetricsCollectorService {
-  const svc = (contextHolder.getPluginContext().services as any).metrics?.service;
+function getService(
+  contextHolder: MashroomPluginContextHolder,
+): MetricsCollectorService {
+  const svc = (contextHolder.getPluginContext().services as any).metrics
+    ?.service;
   if (!svc) {
-    throw new Error('Mashroom Monitoring Metrics Collector service not available');
+    throw new Error(
+      'Mashroom Monitoring Metrics Collector service not available',
+    );
   }
   return svc as MetricsCollectorService;
 }
 
-const toolMap = new Map<string, (contextHolder: MashroomPluginContextHolder) => MCPToolDescriptor>();
+const toolMap = new Map<
+  string,
+  (contextHolder: MashroomPluginContextHolder) => MCPToolDescriptor
+>();
 
 // list_metrics
 toolMap.set('list_metrics', (contextHolder) => {
@@ -174,11 +209,14 @@ toolMap.set('list_metrics', (contextHolder) => {
   return {
     callback: async () => {
       log.debug('list_metrics called');
-      const resourceMetrics = await collectorService.getOpenTelemetryResourceMetrics();
+      const resourceMetrics =
+        await collectorService.getOpenTelemetryResourceMetrics();
       const entries = buildMetricsList(resourceMetrics);
 
       if (entries.length === 0) {
-        return { content: [{ type: 'text', text: 'No metrics collected yet.' }] };
+        return {
+          content: [{ type: 'text', text: 'No metrics collected yet.' }],
+        };
       }
 
       const lines = entries.map(
@@ -204,14 +242,23 @@ toolMap.set('get_metric', (contextHolder) => {
   const log = createLogger(contextHolder);
 
   return {
-    inputSchema: { metricName: z.string().describe('The exact metric name as shown in list_metrics') },
+    inputSchema: {
+      metricName: z
+        .string()
+        .describe('The exact metric name as shown in list_metrics'),
+    },
     callback: async ({ metricName }: { metricName: string }) => {
       log.debug(`get_metric called, metricName=${metricName}`);
-      const resourceMetrics = await collectorService.getOpenTelemetryResourceMetrics();
+      const resourceMetrics =
+        await collectorService.getOpenTelemetryResourceMetrics();
       const metricData = findMetric(resourceMetrics, metricName);
 
       if (!metricData) {
-        return { content: [{ type: 'text', text: `Metric "${metricName}" not found.` }] };
+        return {
+          content: [
+            { type: 'text', text: `Metric "${metricName}" not found.` },
+          ],
+        };
       }
 
       const header = [
@@ -220,21 +267,29 @@ toolMap.set('get_metric', (contextHolder) => {
         `type: ${getDataPointTypeName(metricData.dataPointType)}`,
         `description: ${metricData.descriptor.description || '(none)'}`,
         `unit: ${metricData.descriptor.unit || '(none)'}`,
-        `isMonotonic: ${('isMonotonic' in metricData ? metricData.isMonotonic : 'n/a')}`,
+        `isMonotonic: ${'isMonotonic' in metricData ? metricData.isMonotonic : 'n/a'}`,
         `aggregationTemporality: ${metricData.aggregationTemporality === 0 ? 'CUMULATIVE' : 'DELTA'}`,
       ].join('\n');
 
       const points = metricData.dataPoints;
       if (points.length === 0) {
-        return { content: [{ type: 'text', text: `${header}\n\nNo data points collected yet.` }] };
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `${header}\n\nNo data points collected yet.`,
+            },
+          ],
+        };
       }
 
       const pointLines = points.map((dp, idx) => {
         const attrs = formatAttributes(dp.attributes);
         const timeLabel = attrs ? ` [${attrs}]` : '';
-        const valueStr = getDataPointTypeName(metricData.dataPointType) === 'histogram'
-          ? formatHistogramValue(dp.value as Histogram)
-          : String(dp.value);
+        const valueStr =
+          getDataPointTypeName(metricData.dataPointType) === 'histogram'
+            ? formatHistogramValue(dp.value as Histogram)
+            : String(dp.value);
 
         return `${idx + 1}. value: ${valueStr}${timeLabel}`;
       });
@@ -259,11 +314,14 @@ toolMap.set('get_metric_summary', (contextHolder) => {
   return {
     callback: async () => {
       log.debug('get_metric_summary called');
-      const resourceMetrics = await collectorService.getOpenTelemetryResourceMetrics();
+      const resourceMetrics =
+        await collectorService.getOpenTelemetryResourceMetrics();
       const entries = buildMetricsList(resourceMetrics);
 
       if (entries.length === 0) {
-        return { content: [{ type: 'text', text: 'No metrics collected yet.' }] };
+        return {
+          content: [{ type: 'text', text: 'No metrics collected yet.' }],
+        };
       }
 
       const lines = entries.map(
@@ -288,17 +346,26 @@ toolMap.set('search_metrics', (contextHolder) => {
   const log = createLogger(contextHolder);
 
   return {
-    inputSchema: { pattern: z.string().describe('Substring to search for in metric names') },
+    inputSchema: {
+      pattern: z.string().describe('Substring to search for in metric names'),
+    },
     callback: async ({ pattern }: { pattern: string }) => {
       log.debug(`search_metrics called, pattern=${pattern}`);
-      const resourceMetrics = await collectorService.getOpenTelemetryResourceMetrics();
+      const resourceMetrics =
+        await collectorService.getOpenTelemetryResourceMetrics();
       const entries = buildMetricsList(resourceMetrics);
       const lowerPattern = pattern.toLowerCase();
 
-      const filtered = entries.filter((e) => e.name.toLowerCase().includes(lowerPattern));
+      const filtered = entries.filter((e) =>
+        e.name.toLowerCase().includes(lowerPattern),
+      );
 
       if (filtered.length === 0) {
-        return { content: [{ type: 'text', text: `No metrics found matching "${pattern}".` }] };
+        return {
+          content: [
+            { type: 'text', text: `No metrics found matching "${pattern}".` },
+          ],
+        };
       }
 
       const lines = filtered.map(
@@ -324,14 +391,23 @@ toolMap.set('get_metric_histogram_buckets', (contextHolder) => {
   const log = createLogger(contextHolder);
 
   return {
-    inputSchema: { metricName: z.string().describe('The exact histogram metric name') },
+    inputSchema: {
+      metricName: z.string().describe('The exact histogram metric name'),
+    },
     callback: async ({ metricName }: { metricName: string }) => {
-      log.debug(`get_metric_histogram_buckets called, metricName=${metricName}`);
-      const resourceMetrics = await collectorService.getOpenTelemetryResourceMetrics();
+      log.debug(
+        `get_metric_histogram_buckets called, metricName=${metricName}`,
+      );
+      const resourceMetrics =
+        await collectorService.getOpenTelemetryResourceMetrics();
       const metricData = findMetric(resourceMetrics, metricName);
 
       if (!metricData) {
-        return { content: [{ type: 'text', text: `Metric "${metricName}" not found.` }] };
+        return {
+          content: [
+            { type: 'text', text: `Metric "${metricName}" not found.` },
+          ],
+        };
       }
 
       if (metricData.dataPointType !== 0 && metricData.dataPointType !== 1) {
@@ -347,7 +423,14 @@ toolMap.set('get_metric_histogram_buckets', (contextHolder) => {
 
       const points = metricData.dataPoints;
       if (points.length === 0) {
-        return { content: [{ type: 'text', text: `Metric "${metricName}" has no data points yet.` }] };
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Metric "${metricName}" has no data points yet.`,
+            },
+          ],
+        };
       }
 
       // Use the latest data point
@@ -369,7 +452,9 @@ toolMap.set('get_metric_histogram_buckets', (contextHolder) => {
       for (let i = 0; i <= boundaries.length; i++) {
         const lower = i === 0 ? '-Inf' : String(boundaries[i - 1]);
         const upper = i < boundaries.length ? String(boundaries[i]) : '+Inf';
-        bucketLines.push(`  [${lower}, ${upper}) => ${bucketCounts[i] ?? 0} samples`);
+        bucketLines.push(
+          `  [${lower}, ${upper}) => ${bucketCounts[i] ?? 0} samples`,
+        );
       }
 
       const summary = [
@@ -393,9 +478,12 @@ toolMap.set('get_metric_histogram_buckets', (contextHolder) => {
 
 const toolPlugin: MCPToolPluginExport = {
   getTool(config, contextHolder) {
-    const svc = (contextHolder.getPluginContext().services as any).metrics?.service;
+    const svc = (contextHolder.getPluginContext().services as any).metrics
+      ?.service;
     if (!svc) {
-      throw new Error('Mashroom Monitoring Metrics Collector service not available');
+      throw new Error(
+        'Mashroom Monitoring Metrics Collector service not available',
+      );
     }
 
     // Wire the metrics collector into the MCP API (once)

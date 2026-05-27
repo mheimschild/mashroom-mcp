@@ -39,9 +39,7 @@ export function sanitizeInput(input: string, maxLength = 10000): string {
   sanitized = sanitized.replace(/<[^>]*>/g, '');
 
   // Escape special characters that could be used in template injection
-  sanitized = sanitized
-    .replace(/\{/g, '\\{')
-    .replace(/\}/g, '\\}');
+  sanitized = sanitized.replace(/\{/g, '\\{').replace(/\}/g, '\\}');
 
   // Remove null bytes
   sanitized = sanitized.replace(/\0/g, '');
@@ -77,10 +75,10 @@ export function sanitizePath(input: string): string {
 
   // Ensure it starts with / for paths
   if (result && !result.startsWith('/')) {
-    result = '/' + result;
+    result = `/${result}`;
   }
 
-  // Remove null bytes and control characters
+  // biome-ignore lint/suspicious/noControlCharactersInRegex: intentionally removing control chars
   result = result.replace(/[\x00-\x1f]/g, '');
 
   return result;
@@ -89,7 +87,10 @@ export function sanitizePath(input: string): string {
 /**
  * Sanitize a JSON string to ensure it's valid and doesn't exceed size limits.
  */
-export function sanitizeJson(input: string, maxSize = 1_000_000): Record<string, unknown> {
+export function sanitizeJson(
+  input: string,
+  maxSize = 1_000_000,
+): Record<string, unknown> {
   if (input.length > maxSize) {
     throw new Error('JSON input exceeds maximum size');
   }

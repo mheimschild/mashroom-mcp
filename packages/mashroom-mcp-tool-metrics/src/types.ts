@@ -1,4 +1,7 @@
-import type { MashroomPluginConfig, MashroomPluginContextHolder } from '@mashroom/mashroom/type-definitions';
+import type {
+  MashroomPluginConfig,
+  MashroomPluginContextHolder,
+} from '@mashroom/mashroom/type-definitions';
 
 /**
  * The tool descriptor returned by an MCP tool plugin implementation.

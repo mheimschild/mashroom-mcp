@@ -2,36 +2,30 @@
   "$schema": "https://www.mashroom-server.com/schemas/mashroom-plugins.json",
   "devModeBuildScript": "build",
   "plugins": [
-      {
-          "name": "MCP Client App",
-          "title": {
-              "en": "MCP Client App",
-              "de": "MCP Client App"
-          },
-          "category": "Admin Tools",
-          "type": "portal-app",
-          "bootstrap": "startMCPClientApp",
-          "resources": {
-              "js": [
-                  "static/js/index.js"
-              ],
-              "css": []
-          },
-          "defaultConfig": {
-              "resourcesRoot": "./dist",
-              "restProxies": {},
-              "rolePermissions": {
-                  "edit": [
-                      "Administrator"
-                  ],
-                  "doEverything": [
-                      "Administrator"
-                  ]
-              },
-              "appConfig": {
-                  "name": "World"
-              }
-          }
+    {
+      "name": "MCP Client App",
+      "title": {
+        "en": "MCP Client App",
+        "de": "MCP Client App"
+      },
+      "category": "Admin Tools",
+      "type": "portal-app",
+      "bootstrap": "startMCPClientApp",
+      "resources": {
+        "js": ["static/js/index.js"],
+        "css": []
+      },
+      "defaultConfig": {
+        "resourcesRoot": "./dist",
+        "restProxies": {},
+        "rolePermissions": {
+          "edit": ["Administrator"],
+          "doEverything": ["Administrator"]
+        },
+        "appConfig": {
+          "name": "World"
+        }
       }
+    }
   ]
 }

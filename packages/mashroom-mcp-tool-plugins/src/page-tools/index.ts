@@ -1,20 +1,39 @@
-import type { MashroomLogger, MashroomPluginContextHolder } from '@mashroom/mashroom/type-definitions';
+import type {
+  MashroomLogger,
+  MashroomPluginContextHolder,
+} from '@mashroom/mashroom/type-definitions';
 import type { MashroomPortalService } from '@mashroom/mashroom-portal/type-definitions';
 import z from 'zod';
-import type { MCPToolPluginExport, MCPToolDescriptor, MCPToolConfig } from '../types';
-import { findSiteByPath, resolveTitle, sanitizeInput, sanitizeCss, sanitizePath } from '../helpers';
+import {
+  findSiteByPath,
+  resolveTitle,
+  sanitizeCss,
+  sanitizeInput,
+  sanitizePath,
+} from '../helpers';
+import type {
+  MCPToolConfig,
+  MCPToolDescriptor,
+  MCPToolPluginExport,
+} from '../types';
 
-function createLogger(contextHolder: MashroomPluginContextHolder): MashroomLogger {
-  return contextHolder.getPluginContext().loggerFactory('mashroom.mcp-tools.page');
+function createLogger(
+  contextHolder: MashroomPluginContextHolder,
+): MashroomLogger {
+  return contextHolder
+    .getPluginContext()
+    .loggerFactory('mashroom.mcp-tools.page');
 }
 
-const toolMap = new Map<string, (contextHolder: MashroomPluginContextHolder) => MCPToolDescriptor>();
+const toolMap = new Map<
+  string,
+  (contextHolder: MashroomPluginContextHolder) => MCPToolDescriptor
+>();
 
 // site_pages
 toolMap.set('site_pages', (contextHolder) => {
-  const portalService = contextHolder
-    .getPluginContext()
-    .services.portal?.service as MashroomPortalService;
+  const portalService = contextHolder.getPluginContext().services.portal
+    ?.service as MashroomPortalService;
   const log = createLogger(contextHolder);
 
   return {
@@ -27,7 +46,12 @@ toolMap.set('site_pages', (contextHolder) => {
       const site = await findSiteByPath(portalService, sanitizedSitePath);
       if (!site) {
         return {
-          content: [{ type: 'text', text: `No site found matching path "${sanitizedSitePath}".` }],
+          content: [
+            {
+              type: 'text',
+              text: `No site found matching path "${sanitizedSitePath}".`,
+            },
+          ],
         };
       }
 
@@ -49,9 +73,8 @@ toolMap.set('site_pages', (contextHolder) => {
 
 // get_page
 toolMap.set('get_page', (contextHolder) => {
-  const portalService = contextHolder
-    .getPluginContext()
-    .services.portal?.service as MashroomPortalService;
+  const portalService = contextHolder.getPluginContext().services.portal
+    ?.service as MashroomPortalService;
   const log = createLogger(contextHolder);
 
   return {
@@ -61,7 +84,11 @@ toolMap.set('get_page', (contextHolder) => {
       log.debug(`get_page called, pageId=${sanitizedPageId}`);
       const page = await portalService.getPage(sanitizedPageId);
       if (!page) {
-        return { content: [{ type: 'text', text: `Page "${sanitizedPageId}" not found.` }] };
+        return {
+          content: [
+            { type: 'text', text: `Page "${sanitizedPageId}" not found.` },
+          ],
+        };
       }
 
       let appsSummary = '(no apps assigned)';
@@ -95,20 +122,35 @@ toolMap.set('get_page', (contextHolder) => {
 
 // update_page
 toolMap.set('update_page', (contextHolder) => {
-  const portalService = contextHolder
-    .getPluginContext()
-    .services.portal?.service as MashroomPortalService;
+  const portalService = contextHolder.getPluginContext().services.portal
+    ?.service as MashroomPortalService;
   const log = createLogger(contextHolder);
 
   return {
     inputSchema: {
-      pageId: z.string().describe('The page ID, page title, or friendly URL of the page to update'),
+      pageId: z
+        .string()
+        .describe(
+          'The page ID, page title, or friendly URL of the page to update',
+        ),
       title: z.string().optional().describe('New page title'),
       description: z.string().optional().describe('New page description'),
-      keywords: z.string().optional().describe('Comma-separated keywords for SEO'),
-      theme: z.string().optional().describe('Theme override (or empty string to remove override)'),
-      layout: z.string().optional().describe('Layout override (or empty string to remove override)'),
-      extraCss: z.string().optional().describe('Extra CSS to inject on this page'),
+      keywords: z
+        .string()
+        .optional()
+        .describe('Comma-separated keywords for SEO'),
+      theme: z
+        .string()
+        .optional()
+        .describe('Theme override (or empty string to remove override)'),
+      layout: z
+        .string()
+        .optional()
+        .describe('Layout override (or empty string to remove override)'),
+      extraCss: z
+        .string()
+        .optional()
+        .describe('Extra CSS to inject on this page'),
     },
     callback: async (args: {
       pageId: string;
@@ -119,14 +161,20 @@ toolMap.set('update_page', (contextHolder) => {
       layout?: string;
       extraCss?: string;
     }) => {
-      const { pageId, title, description, keywords, theme, layout, extraCss } = args;
+      const { pageId, title, description, keywords, theme, layout, extraCss } =
+        args;
       const sanitizedPageId = sanitizeInput(pageId, 256);
       const sanitizedTitle = title ? sanitizeInput(title) : undefined;
-      const sanitizedDescription = description ? sanitizeInput(description) : undefined;
-      const sanitizedKeywords = keywords ? sanitizeInput(keywords, 500) : undefined;
+      const sanitizedDescription = description
+        ? sanitizeInput(description)
+        : undefined;
+      const sanitizedKeywords = keywords
+        ? sanitizeInput(keywords, 500)
+        : undefined;
       const sanitizedTheme = theme ? sanitizeInput(theme) : undefined;
       const sanitizedLayout = layout ? sanitizeInput(layout) : undefined;
-      const sanitizedExtraCss = extraCss !== undefined ? sanitizeCss(extraCss) : undefined;
+      const sanitizedExtraCss =
+        extraCss !== undefined ? sanitizeCss(extraCss) : undefined;
 
       log.debug(`update_page called, pageId=${sanitizedPageId}`);
       let existing = await portalService.getPage(sanitizedPageId);
@@ -135,7 +183,9 @@ toolMap.set('update_page', (contextHolder) => {
 
       if (!existing) {
         // Fallback: search all pages across all sites
-        log.debug(`Page not found by ID "${sanitizedPageId}", searching by title/friendlyUrl...`);
+        log.debug(
+          `Page not found by ID "${sanitizedPageId}", searching by title/friendlyUrl...`,
+        );
         const sites = await portalService.getSites();
         const query = sanitizedPageId.toLowerCase();
         const queryNoSlash = query.replace(/^\//, '');
@@ -206,7 +256,9 @@ toolMap.set('update_page', (contextHolder) => {
         if (match) {
           existing = await portalService.getPage(match.page.pageId);
           resolvedPageId = match.page.pageId;
-          log.debug(`Found page by ${resolvedBy}: "${sanitizedPageId}" -> pageId="${resolvedPageId}"`);
+          log.debug(
+            `Found page by ${resolvedBy}: "${sanitizedPageId}" -> pageId="${resolvedPageId}"`,
+          );
         }
       }
 
@@ -216,7 +268,9 @@ toolMap.set('update_page', (contextHolder) => {
         const allPages: string[] = [];
         for (const site of sites) {
           for (const p of site.pages) {
-            allPages.push(`  [${p.pageId}] ${resolveTitle(p.title)} (friendlyUrl: ${p.friendlyUrl})`);
+            allPages.push(
+              `  [${p.pageId}] ${resolveTitle(p.title)} (friendlyUrl: ${p.friendlyUrl})`,
+            );
           }
         }
         return {
@@ -238,7 +292,9 @@ toolMap.set('update_page', (contextHolder) => {
           const ref = site.pages.find((p) => p.pageId === resolvedPageId);
           if (ref) {
             const newTitleValue =
-              typeof ref.title === 'string' ? sanitizedTitle : { ...ref.title, en: sanitizedTitle };
+              typeof ref.title === 'string'
+                ? sanitizedTitle
+                : { ...ref.title, en: sanitizedTitle };
             const updatedPages = site.pages.map((p) =>
               p.pageId === resolvedPageId ? { ...p, title: newTitleValue } : p,
             );
@@ -250,7 +306,8 @@ toolMap.set('update_page', (contextHolder) => {
 
       // Update the page data record
       const update: Record<string, unknown> = { pageId: resolvedPageId };
-      if (sanitizedDescription !== undefined) update.description = sanitizedDescription;
+      if (sanitizedDescription !== undefined)
+        update.description = sanitizedDescription;
       if (sanitizedKeywords !== undefined) update.keywords = sanitizedKeywords;
       if (sanitizedTheme !== undefined) update.theme = sanitizedTheme;
       if (sanitizedLayout !== undefined) update.layout = sanitizedLayout;
@@ -264,25 +321,41 @@ toolMap.set('update_page', (contextHolder) => {
       const resolvedNote = resolvedBy
         ? ` (resolved by ${resolvedBy} to pageId "${resolvedPageId}")`
         : '';
-      return { content: [{ type: 'text', text: `Page "${resolvedPageId}" updated successfully.${resolvedNote}` }] };
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Page "${resolvedPageId}" updated successfully.${resolvedNote}`,
+          },
+        ],
+      };
     },
   };
 });
 
 // insert_page
 toolMap.set('insert_page', (contextHolder) => {
-  const portalService = contextHolder
-    .getPluginContext()
-    .services.portal?.service as MashroomPortalService;
+  const portalService = contextHolder.getPluginContext().services.portal
+    ?.service as MashroomPortalService;
   const log = createLogger(contextHolder);
 
   return {
     inputSchema: {
-      sitePath: z.string().describe('Path of the site to add the page to (e.g. /web)'),
+      sitePath: z
+        .string()
+        .describe('Path of the site to add the page to (e.g. /web)'),
       newPageId: z.string().describe('ID of the new page'),
       newTitle: z.string().describe('Display title for the page'),
-      friendlyUrl: z.string().optional().describe('Friendly URL path for the page (e.g. /about). Defaults to /<pageId>.'),
-      newDescription: z.string().optional().describe('Description for the new page'),
+      friendlyUrl: z
+        .string()
+        .optional()
+        .describe(
+          'Friendly URL path for the page (e.g. /about). Defaults to /<pageId>.',
+        ),
+      newDescription: z
+        .string()
+        .optional()
+        .describe('Description for the new page'),
       theme: z.string().optional().describe('Theme override for this page'),
       layout: z.string().optional().describe('Layout override for this page'),
     },
@@ -295,20 +368,39 @@ toolMap.set('insert_page', (contextHolder) => {
       theme?: string;
       layout?: string;
     }) => {
-      const { sitePath, newPageId, newTitle, friendlyUrl, newDescription, theme, layout } = args;
+      const {
+        sitePath,
+        newPageId,
+        newTitle,
+        friendlyUrl,
+        newDescription,
+        theme,
+        layout,
+      } = args;
       const sanitizedSitePath = sanitizePath(sitePath);
       const sanitizedNewPageId = sanitizeInput(newPageId, 256);
       const sanitizedNewTitle = sanitizeInput(newTitle);
-      const sanitizedFriendlyUrl = friendlyUrl ? sanitizePath(friendlyUrl) : undefined;
-      const sanitizedDesc = newDescription ? sanitizeInput(newDescription) : undefined;
+      const sanitizedFriendlyUrl = friendlyUrl
+        ? sanitizePath(friendlyUrl)
+        : undefined;
+      const sanitizedDesc = newDescription
+        ? sanitizeInput(newDescription)
+        : undefined;
       const sanitizedTheme = theme ? sanitizeInput(theme) : undefined;
       const sanitizedLayout = layout ? sanitizeInput(layout) : undefined;
 
-      log.debug(`insert_page called, sitePath=${sanitizedSitePath}, newPageId=${sanitizedNewPageId}`);
+      log.debug(
+        `insert_page called, sitePath=${sanitizedSitePath}, newPageId=${sanitizedNewPageId}`,
+      );
       const site = await findSiteByPath(portalService, sanitizedSitePath);
       if (!site) {
         return {
-          content: [{ type: 'text', text: `Site matching path "${sanitizedSitePath}" not found.` }],
+          content: [
+            {
+              type: 'text',
+              text: `Site matching path "${sanitizedSitePath}" not found.`,
+            },
+          ],
         };
       }
 
@@ -324,7 +416,10 @@ toolMap.set('insert_page', (contextHolder) => {
         title: sanitizedNewTitle,
         friendlyUrl: sanitizedFriendlyUrl ?? `/${sanitizedNewPageId}`,
       };
-      await portalService.updateSite({ ...site, pages: [...site.pages, pageRef] });
+      await portalService.updateSite({
+        ...site,
+        pages: [...site.pages, pageRef],
+      });
 
       return {
         content: [
@@ -340,9 +435,8 @@ toolMap.set('insert_page', (contextHolder) => {
 
 const toolPlugin: MCPToolPluginExport = {
   getTool(_config, contextHolder) {
-    const portalService = contextHolder
-      .getPluginContext()
-      .services.portal?.service as MashroomPortalService | undefined;
+    const portalService = contextHolder.getPluginContext().services.portal
+      ?.service as MashroomPortalService | undefined;
 
     if (!portalService) {
       throw new Error('Mashroom Portal service not available');

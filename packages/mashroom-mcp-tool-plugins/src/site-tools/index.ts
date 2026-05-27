@@ -1,20 +1,33 @@
-import type { MashroomLogger, MashroomPluginContextHolder } from '@mashroom/mashroom/type-definitions';
+import type {
+  MashroomLogger,
+  MashroomPluginContextHolder,
+} from '@mashroom/mashroom/type-definitions';
 import type { MashroomPortalService } from '@mashroom/mashroom-portal/type-definitions';
 import z from 'zod';
-import type { MCPToolPluginExport, MCPToolDescriptor, MCPToolConfig } from '../types';
 import { resolveTitle, sanitizeInput, sanitizePath } from '../helpers';
+import type {
+  MCPToolConfig,
+  MCPToolDescriptor,
+  MCPToolPluginExport,
+} from '../types';
 
-function createLogger(contextHolder: MashroomPluginContextHolder): MashroomLogger {
-  return contextHolder.getPluginContext().loggerFactory('mashroom.mcp-tools.site');
+function createLogger(
+  contextHolder: MashroomPluginContextHolder,
+): MashroomLogger {
+  return contextHolder
+    .getPluginContext()
+    .loggerFactory('mashroom.mcp-tools.site');
 }
 
-const toolMap = new Map<string, (contextHolder: MashroomPluginContextHolder) => MCPToolDescriptor>();
+const toolMap = new Map<
+  string,
+  (contextHolder: MashroomPluginContextHolder) => MCPToolDescriptor
+>();
 
 // portal_sites
 toolMap.set('portal_sites', (contextHolder) => {
-  const portalService = contextHolder
-    .getPluginContext()
-    .services.portal?.service as MashroomPortalService;
+  const portalService = contextHolder.getPluginContext().services.portal
+    ?.service as MashroomPortalService;
   const log = createLogger(contextHolder);
 
   return {
@@ -42,9 +55,8 @@ toolMap.set('portal_sites', (contextHolder) => {
 
 // get_site
 toolMap.set('get_site', (contextHolder) => {
-  const portalService = contextHolder
-    .getPluginContext()
-    .services.portal?.service as MashroomPortalService;
+  const portalService = contextHolder.getPluginContext().services.portal
+    ?.service as MashroomPortalService;
   const log = createLogger(contextHolder);
 
   return {
@@ -54,7 +66,11 @@ toolMap.set('get_site', (contextHolder) => {
       log.debug(`get_site called, siteId=${sanitizedSiteId}`);
       const site = await portalService.getSite(sanitizedSiteId);
       if (!site) {
-        return { content: [{ type: 'text', text: `Site "${sanitizedSiteId}" not found.` }] };
+        return {
+          content: [
+            { type: 'text', text: `Site "${sanitizedSiteId}" not found.` },
+          ],
+        };
       }
       const pagesSummary = site.pages
         .map(
@@ -84,9 +100,8 @@ toolMap.set('get_site', (contextHolder) => {
 
 // update_site
 toolMap.set('update_site', (contextHolder) => {
-  const portalService = contextHolder
-    .getPluginContext()
-    .services.portal?.service as MashroomPortalService;
+  const portalService = contextHolder.getPluginContext().services.portal
+    ?.service as MashroomPortalService;
   const log = createLogger(contextHolder);
 
   return {
@@ -94,8 +109,14 @@ toolMap.set('update_site', (contextHolder) => {
       siteId: z.string().describe('The site ID to update'),
       title: z.string().optional().describe('New site title'),
       path: z.string().optional().describe('New site path'),
-      defaultTheme: z.string().optional().describe('Default theme for the site'),
-      defaultLayout: z.string().optional().describe('Default layout for the site'),
+      defaultTheme: z
+        .string()
+        .optional()
+        .describe('Default theme for the site'),
+      defaultLayout: z
+        .string()
+        .optional()
+        .describe('Default layout for the site'),
     },
     callback: async (args: {
       siteId: string;
@@ -108,10 +129,16 @@ toolMap.set('update_site', (contextHolder) => {
       const sanitizedSiteId = sanitizeInput(siteId, 256);
       const sanitizedPath = path ? sanitizePath(path) : undefined;
       const sanitizedTitle = title ? sanitizeInput(title) : undefined;
-      log.debug(`update_site called, siteId=${sanitizedSiteId}, title=${sanitizedTitle ?? '(not set)'}, path=${sanitizedPath ?? '(not set)'}`);
+      log.debug(
+        `update_site called, siteId=${sanitizedSiteId}, title=${sanitizedTitle ?? '(not set)'}, path=${sanitizedPath ?? '(not set)'}`,
+      );
       const existing = await portalService.getSite(sanitizedSiteId);
       if (!existing) {
-        return { content: [{ type: 'text', text: `Site "${sanitizedSiteId}" not found.` }] };
+        return {
+          content: [
+            { type: 'text', text: `Site "${sanitizedSiteId}" not found.` },
+          ],
+        };
       }
 
       const updatedTitle = sanitizedTitle
@@ -124,12 +151,21 @@ toolMap.set('update_site', (contextHolder) => {
         ...existing,
         ...(sanitizedTitle !== undefined && { title: updatedTitle }),
         ...(sanitizedPath !== undefined && { path: sanitizedPath }),
-        ...(defaultTheme !== undefined && { defaultTheme: sanitizeInput(defaultTheme) }),
-        ...(defaultLayout !== undefined && { defaultLayout: sanitizeInput(defaultLayout) }),
+        ...(defaultTheme !== undefined && {
+          defaultTheme: sanitizeInput(defaultTheme),
+        }),
+        ...(defaultLayout !== undefined && {
+          defaultLayout: sanitizeInput(defaultLayout),
+        }),
       });
 
       return {
-        content: [{ type: 'text', text: `Site "${sanitizedSiteId}" updated successfully.` }],
+        content: [
+          {
+            type: 'text',
+            text: `Site "${sanitizedSiteId}" updated successfully.`,
+          },
+        ],
       };
     },
   };
@@ -137,9 +173,8 @@ toolMap.set('update_site', (contextHolder) => {
 
 // insert_site
 toolMap.set('insert_site', (contextHolder) => {
-  const portalService = contextHolder
-    .getPluginContext()
-    .services.portal?.service as MashroomPortalService;
+  const portalService = contextHolder.getPluginContext().services.portal
+    ?.service as MashroomPortalService;
   const log = createLogger(contextHolder);
 
   return {
@@ -147,8 +182,14 @@ toolMap.set('insert_site', (contextHolder) => {
       newSiteId: z.string().describe('ID of the new site'),
       newTitle: z.string().describe('Title of the new site'),
       newPath: z.string().describe('URL path of the new site (e.g. /my-site)'),
-      defaultTheme: z.string().optional().describe('Default theme name for the site'),
-      defaultLayout: z.string().optional().describe('Default layout name for the site'),
+      defaultTheme: z
+        .string()
+        .optional()
+        .describe('Default theme name for the site'),
+      defaultLayout: z
+        .string()
+        .optional()
+        .describe('Default layout name for the site'),
     },
     callback: async (args: {
       newSiteId: string;
@@ -157,23 +198,33 @@ toolMap.set('insert_site', (contextHolder) => {
       defaultTheme?: string;
       defaultLayout?: string;
     }) => {
-      const { newSiteId, newTitle, newPath, defaultTheme, defaultLayout } = args;
+      const { newSiteId, newTitle, newPath, defaultTheme, defaultLayout } =
+        args;
       const sanitizedSiteId = sanitizeInput(newSiteId, 256);
       const sanitizedNewTitle = sanitizeInput(newTitle);
       const sanitizedNewPath = sanitizePath(newPath);
-      log.debug(`insert_site called, newSiteId=${sanitizedSiteId}, newTitle=${sanitizedNewTitle}, newPath=${sanitizedNewPath}`);
+      log.debug(
+        `insert_site called, newSiteId=${sanitizedSiteId}, newTitle=${sanitizedNewTitle}, newPath=${sanitizedNewPath}`,
+      );
       await portalService.insertSite({
         siteId: sanitizedSiteId,
         title: sanitizedNewTitle,
         path: sanitizedNewPath,
-        ...(defaultTheme !== undefined && { defaultTheme: sanitizeInput(defaultTheme) }),
-        ...(defaultLayout !== undefined && { defaultLayout: sanitizeInput(defaultLayout) }),
+        ...(defaultTheme !== undefined && {
+          defaultTheme: sanitizeInput(defaultTheme),
+        }),
+        ...(defaultLayout !== undefined && {
+          defaultLayout: sanitizeInput(defaultLayout),
+        }),
         pages: [],
       });
 
       return {
         content: [
-          { type: 'text', text: `Site "${sanitizedSiteId}" created at path "${sanitizedNewPath}".` },
+          {
+            type: 'text',
+            text: `Site "${sanitizedSiteId}" created at path "${sanitizedNewPath}".`,
+          },
         ],
       };
     },
@@ -182,9 +233,8 @@ toolMap.set('insert_site', (contextHolder) => {
 
 const toolPlugin: MCPToolPluginExport = {
   getTool(_config, contextHolder) {
-    const portalService = contextHolder
-      .getPluginContext()
-      .services.portal?.service as MashroomPortalService | undefined;
+    const portalService = contextHolder.getPluginContext().services.portal
+      ?.service as MashroomPortalService | undefined;
 
     if (!portalService) {
       throw new Error('Mashroom Portal service not available');

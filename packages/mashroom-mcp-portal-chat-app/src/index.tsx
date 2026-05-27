@@ -1,9 +1,13 @@
+import type { MashroomPortalAppPluginBootstrapFunction } from '@mashroom/mashroom-portal/type-definitions';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
-const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalEl, portalAppSetup, clientServices) => {
+const bootstrap: MashroomPortalAppPluginBootstrapFunction = (
+  portalEl,
+  portalAppSetup,
+  clientServices,
+) => {
   console.log(portalAppSetup);
   console.log(clientServices);
   console.log(portalAppSetup.proxyPaths);
@@ -15,7 +19,8 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalEl, portalApp
         <App />
       </React.StrictMode>,
     );
-  }  
-}
+  }
+};
 
+// biome-ignore lint/suspicious/noExplicitAny: portal bootstrap requires global window property
 (window as any).startMCPClientApp = bootstrap;

@@ -9,8 +9,8 @@ export default defineConfig({
   },
   performance: {
     chunkSplit: {
-      strategy: 'all-in-one'
-    }
+      strategy: 'all-in-one',
+    },
   },
   plugins: [pluginReact()],
 });

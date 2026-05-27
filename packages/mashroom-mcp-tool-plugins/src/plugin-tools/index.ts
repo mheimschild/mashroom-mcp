@@ -1,18 +1,33 @@
-import type { MashroomLogger, MashroomPluginContextHolder, MashroomPluginService, MashroomPluginPackage } from '@mashroom/mashroom/type-definitions';
+import type {
+  MashroomLogger,
+  MashroomPluginContextHolder,
+  MashroomPluginPackage,
+  MashroomPluginService,
+} from '@mashroom/mashroom/type-definitions';
 import z from 'zod';
-import type { MCPToolPluginExport, MCPToolDescriptor, MCPToolConfig } from '../types';
+import type {
+  MCPToolConfig,
+  MCPToolDescriptor,
+  MCPToolPluginExport,
+} from '../types';
 
-function createLogger(contextHolder: MashroomPluginContextHolder): MashroomLogger {
-  return contextHolder.getPluginContext().loggerFactory('mashroom.mcp-tools.plugin');
+function createLogger(
+  contextHolder: MashroomPluginContextHolder,
+): MashroomLogger {
+  return contextHolder
+    .getPluginContext()
+    .loggerFactory('mashroom.mcp-tools.plugin');
 }
 
-const toolMap = new Map<string, (contextHolder: MashroomPluginContextHolder) => MCPToolDescriptor>();
+const toolMap = new Map<
+  string,
+  (contextHolder: MashroomPluginContextHolder) => MCPToolDescriptor
+>();
 
 // list_plugins
 toolMap.set('list_plugins', (contextHolder) => {
-  const pluginService = contextHolder
-    .getPluginContext()
-    .services.core.pluginService as MashroomPluginService;
+  const pluginService = contextHolder.getPluginContext().services.core
+    .pluginService as MashroomPluginService;
   const log = createLogger(contextHolder);
 
   return {
@@ -40,19 +55,26 @@ toolMap.set('list_plugins', (contextHolder) => {
 
 // get_plugin
 toolMap.set('get_plugin', (contextHolder) => {
-  const pluginService = contextHolder
-    .getPluginContext()
-    .services.core.pluginService as MashroomPluginService;
+  const pluginService = contextHolder.getPluginContext().services.core
+    .pluginService as MashroomPluginService;
   const log = createLogger(contextHolder);
 
   return {
-    inputSchema: { pluginName: z.string().describe('The exact plugin name as shown in list_plugins') },
+    inputSchema: {
+      pluginName: z
+        .string()
+        .describe('The exact plugin name as shown in list_plugins'),
+    },
     callback: async ({ pluginName }: { pluginName: string }) => {
       log.debug(`get_plugin called, pluginName=${pluginName}`);
       const plugins = pluginService.getPlugins();
       const plugin = plugins.find((p) => p.name === pluginName);
       if (!plugin) {
-        return { content: [{ type: 'text', text: `Plugin "${pluginName}" not found.` }] };
+        return {
+          content: [
+            { type: 'text', text: `Plugin "${pluginName}" not found.` },
+          ],
+        };
       }
       return {
         content: [
@@ -78,9 +100,8 @@ toolMap.set('get_plugin', (contextHolder) => {
 
 // list_plugin_packages
 toolMap.set('list_plugin_packages', (contextHolder) => {
-  const pluginService = contextHolder
-    .getPluginContext()
-    .services.core.pluginService as MashroomPluginService;
+  const pluginService = contextHolder.getPluginContext().services.core
+    .pluginService as MashroomPluginService;
   const log = createLogger(contextHolder);
 
   return {
@@ -88,7 +109,9 @@ toolMap.set('list_plugin_packages', (contextHolder) => {
       log.debug('list_plugin_packages called');
       const packages = pluginService.getPluginPackages();
       if (packages.length === 0) {
-        return { content: [{ type: 'text', text: 'No plugin packages found.' }] };
+        return {
+          content: [{ type: 'text', text: 'No plugin packages found.' }],
+        };
       }
       const lines = packages.map(
         (pkg, idx) =>
@@ -108,19 +131,28 @@ toolMap.set('list_plugin_packages', (contextHolder) => {
 
 // get_plugin_package
 toolMap.set('get_plugin_package', (contextHolder) => {
-  const pluginService = contextHolder
-    .getPluginContext()
-    .services.core.pluginService as MashroomPluginService;
+  const pluginService = contextHolder.getPluginContext().services.core
+    .pluginService as MashroomPluginService;
   const log = createLogger(contextHolder);
 
   return {
-    inputSchema: { packageName: z.string().describe('The exact npm package name (e.g. @mashroom/mashroom-portal)') },
+    inputSchema: {
+      packageName: z
+        .string()
+        .describe(
+          'The exact npm package name (e.g. @mashroom/mashroom-portal)',
+        ),
+    },
     callback: async ({ packageName }: { packageName: string }) => {
       log.debug(`get_plugin_package called, packageName=${packageName}`);
       const packages = pluginService.getPluginPackages();
       const pkg = packages.find((p) => p.name === packageName);
       if (!pkg) {
-        return { content: [{ type: 'text', text: `Package "${packageName}" not found.` }] };
+        return {
+          content: [
+            { type: 'text', text: `Package "${packageName}" not found.` },
+          ],
+        };
       }
       return {
         content: [
@@ -136,9 +168,8 @@ toolMap.set('get_plugin_package', (contextHolder) => {
 
 // list_plugin_loaders
 toolMap.set('list_plugin_loaders', (contextHolder) => {
-  const pluginService = contextHolder
-    .getPluginContext()
-    .services.core.pluginService as MashroomPluginService;
+  const pluginService = contextHolder.getPluginContext().services.core
+    .pluginService as MashroomPluginService;
   const log = createLogger(contextHolder);
 
   return {
@@ -147,7 +178,9 @@ toolMap.set('list_plugin_loaders', (contextHolder) => {
       const loaders = pluginService.getPluginLoaders();
       const entries = Object.entries(loaders);
       if (entries.length === 0) {
-        return { content: [{ type: 'text', text: 'No plugin loaders registered.' }] };
+        return {
+          content: [{ type: 'text', text: 'No plugin loaders registered.' }],
+        };
       }
       const lines = entries.map(
         ([pluginType, loader], idx) =>
@@ -167,21 +200,31 @@ toolMap.set('list_plugin_loaders', (contextHolder) => {
 
 // plugins_by_type
 toolMap.set('plugins_by_type', (contextHolder) => {
-  const pluginService = contextHolder
-    .getPluginContext()
-    .services.core.pluginService as MashroomPluginService;
+  const pluginService = contextHolder.getPluginContext().services.core
+    .pluginService as MashroomPluginService;
   const log = createLogger(contextHolder);
 
   return {
     inputSchema: {
-      pluginType: z.string().describe('The exact plugin type to filter by (e.g. web-app, api, middleware, services, storage)'),
+      pluginType: z
+        .string()
+        .describe(
+          'The exact plugin type to filter by (e.g. web-app, api, middleware, services, storage)',
+        ),
     },
     callback: async ({ pluginType }: { pluginType: string }) => {
       log.debug(`plugins_by_type called, pluginType=${pluginType}`);
       const plugins = pluginService.getPlugins();
       const filtered = plugins.filter((p) => p.type === pluginType);
       if (filtered.length === 0) {
-        return { content: [{ type: 'text', text: `No plugins found with type "${pluginType}".` }] };
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `No plugins found with type "${pluginType}".`,
+            },
+          ],
+        };
       }
       const lines = filtered.map(
         (p, idx) =>
@@ -201,9 +244,8 @@ toolMap.set('plugins_by_type', (contextHolder) => {
 
 const toolPlugin: MCPToolPluginExport = {
   getTool(_config, contextHolder) {
-    const pluginService = contextHolder
-      .getPluginContext()
-      .services.core.pluginService as MashroomPluginService | undefined;
+    const pluginService = contextHolder.getPluginContext().services.core
+      .pluginService as MashroomPluginService | undefined;
 
     if (!pluginService) {
       throw new Error('Mashroom Plugin Service not available');
@@ -220,7 +262,12 @@ const toolPlugin: MCPToolPluginExport = {
 };
 
 function formatPluginPackage(pkg: MashroomPluginPackage): string {
-  const pluginList = pkg.pluginDefinitions.map((def) => `  - ${def.name}${def.description ? ` (${def.description})` : ''}`).join('\n');
+  const pluginList = pkg.pluginDefinitions
+    .map(
+      (def) =>
+        `  - ${def.name}${def.description ? ` (${def.description})` : ''}`,
+    )
+    .join('\n');
   return [
     `name: ${pkg.name}`,
     `version: ${pkg.version}`,
@@ -232,7 +279,9 @@ function formatPluginPackage(pkg: MashroomPluginPackage): string {
     `path: ${pkg.pluginPackagePath}`,
     pkg.errorMessage ? `error: ${pkg.errorMessage}` : null,
     `\nContained plugins (${pkg.pluginDefinitions.length}):\n${pluginList || '  (none)'}`,
-  ].filter(Boolean).join('\n');
+  ]
+    .filter(Boolean)
+    .join('\n');
 }
 
 export default async () => toolPlugin;

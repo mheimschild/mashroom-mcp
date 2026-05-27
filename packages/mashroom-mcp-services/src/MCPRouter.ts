@@ -150,18 +150,16 @@ const securityContextMiddleware: RequestHandler = (
     return;
   }
 
-  const services = mashroomCtx['services'] as
-    | Record<string, unknown>
-    | undefined;
+  const services = mashroomCtx.services as Record<string, unknown> | undefined;
   if (!services) {
     next();
     return;
   }
 
-  const securityService = services['security'] as
+  const securityService = services.security as
     | Record<string, unknown>
     | undefined;
-  if (!securityService || !securityService['service']) {
+  if (!securityService || !securityService.service) {
     next();
     return;
   }

@@ -1,4 +1,7 @@
-import type { MashroomPluginConfig, MashroomPluginContextHolder } from '@mashroom/mashroom/type-definitions';
+import type {
+  MashroomPluginConfig,
+  MashroomPluginContextHolder,
+} from '@mashroom/mashroom/type-definitions';
 
 /**
  * The tool descriptor returned by an MCP tool plugin implementation.
@@ -67,7 +70,9 @@ export interface MCPToolPluginConfig {
  * Extended config passed to getTool() — includes the derived tool name
  * so implementations that share a bootstrap can route to the right handler.
  */
-export interface MCPToolConfig extends MashroomPluginConfig, MCPToolPluginConfig {
+export interface MCPToolConfig
+  extends MashroomPluginConfig,
+    MCPToolPluginConfig {
   /**
    * The MCP tool name derived from the plugin name (lowercase, spaces -> underscores).
    */
