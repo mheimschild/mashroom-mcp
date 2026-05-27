@@ -1,0 +1,17 @@
+{
+  "$schema": "https://www.mashroom-server.com/schemas/mashroom-plugins.json",
+  "devModeBuildScript": "build",
+  "plugins": [
+    {
+      "name": "Mashroom MCP Chat API",
+      "type": "api",
+      "bootstrap": "./dist/index.js",
+      "requires": ["Mashroom MCP API"],
+      "defaultConfig": {
+        "model": "granite4:latest",
+        "ollamaBaseUrl": "http://localhost:11434",
+        "mcpUrl": "http://localhost:5051/mcp"
+      }
+    }
+  ]
+}

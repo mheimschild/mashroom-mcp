@@ -3,10 +3,10 @@ import MashroomChatApi from './MashroomChatApi';
 
 const bootstrap: MashroomApiPluginBootstrapFunction = async (
   _,
-  _pluginConfig,
+  pluginConfig,
   pluginContextHolder,
 ) => {
-  const api = new MashroomChatApi(pluginContextHolder);
+  const api = new MashroomChatApi(pluginContextHolder, pluginConfig);
   return api.router();
 };
 

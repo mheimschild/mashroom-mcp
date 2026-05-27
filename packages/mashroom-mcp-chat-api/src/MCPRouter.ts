@@ -1,19 +1,53 @@
-import type { MashroomLogger } from '@mashroom/mashroom/type-definitions';
-import { Ollama } from '@langchain/ollama';
-import { Router, type Request, type Response } from 'express';
-import { Agent, createReactAgent } from '@langchain/langgraph/prebuilt';
+import type {
+  CompiledStateGraph,
+  StateDefinitionInit,
+} from '@langchain/langgraph';
+import { createReactAgent } from '@langchain/langgraph/prebuilt';
 import { MultiServerMCPClient } from '@langchain/mcp-adapters';
+import { Ollama } from '@langchain/ollama';
+import type { MashroomLogger } from '@mashroom/mashroom/type-definitions';
+import type { Request, Response, Router } from 'express';
+
+type AgentType = CompiledStateGraph<
+  unknown,
+  unknown,
+  string,
+  StateDefinitionInit,
+  StateDefinitionInit,
+  StateDefinitionInit
+>;
+
+export interface ChatPluginConfig {
+  model?: string;
+  ollamaBaseUrl?: string;
+  mcpUrl?: string;
+}
+
+const DEFAULT_CONFIG: Required<ChatPluginConfig> = {
+  model: 'granite4:latest',
+  ollamaBaseUrl: 'http://localhost:11434',
+  mcpUrl: 'http://localhost:5051/mcp',
+};
+
+let agent: AgentType | null = null;
+let config: Required<ChatPluginConfig> = DEFAULT_CONFIG;
+
+export const setConfig = (pluginConfig: ChatPluginConfig): void => {
+  config = {
+    model: pluginConfig.model ?? DEFAULT_CONFIG.model,
+    ollamaBaseUrl: pluginConfig.ollamaBaseUrl ?? DEFAULT_CONFIG.ollamaBaseUrl,
+    mcpUrl: pluginConfig.mcpUrl ?? DEFAULT_CONFIG.mcpUrl,
+  };
+};
 
 /**
  * POST /chat handler — streams LLM responses via SSE.
  *
  * Agent pipeline:
- * - Model: Ollama (granite4:latest) via @langchain/ollama
- * - Tools: fetched from MCP server at http://localhost:5051/mcp via MultiServerMCPClient
+ * - Model: Ollama (configurable) via @langchain/ollama
+ * - Tools: fetched from MCP server (configurable) via MultiServerMCPClient
  * - Streaming: uses agent.stream() with streamMode: "messages", filters out tool-node metadata
  */
-
-let agent: Agent | null = null;
 
 const initRouter = (router: Router, logger: MashroomLogger): void => {
   router.post('/', async (req: Request, res: Response) => {
@@ -36,14 +70,15 @@ const initRouter = (router: Router, logger: MashroomLogger): void => {
       res.flushHeaders();
 
       // Stream the agent response
-      const stream = await agent.stream(message, {
-        streamMode: 'messages',
-      });
+      const stream = await agent.stream(
+        { messages: [{ role: 'user', content: message }] },
+        { streamMode: 'messages' },
+      );
 
       for await (const chunk of stream) {
         // Filter out tool-node metadata — only send actual content
         for (const item of Array.isArray(chunk) ? chunk : [chunk]) {
-          const content = (item as any)?.content;
+          const content = (item as { content?: unknown })?.content;
           if (content && typeof content === 'string') {
             res.write(`data: ${JSON.stringify({ content })}\n\n`);
           }
@@ -57,30 +92,30 @@ const initRouter = (router: Router, logger: MashroomLogger): void => {
       if (!res.headersSent) {
         res.status(500).json({ error: 'Internal server error' });
       } else {
-        res.write(`data: ${JSON.stringify({ error: 'Internal server error' })}\n\n`);
+        res.write(
+          `data: ${JSON.stringify({ error: 'Internal server error' })}\n\n`,
+        );
         res.end();
       }
     }
   });
 };
 
-async function createAgent(logger: MashroomLogger): Promise<Agent> {
+async function createAgent(logger: MashroomLogger): Promise<AgentType> {
   const model = new Ollama({
-    model: 'granite4:latest',
-    baseUrl: 'http://localhost:11434',
+    model: config.model,
+    baseUrl: config.ollamaBaseUrl,
   });
 
   const mcpClient = new MultiServerMCPClient({
-    servers: {
-      portalTools: {
-        url: 'http://localhost:5051/mcp',
-      },
+    portalTools: {
+      url: config.mcpUrl,
     },
   });
 
-  await mcpClient.connect();
+  await mcpClient.initializeConnections();
 
-  const tools = await mcpClient.tools();
+  const tools = await mcpClient.getTools();
 
   logger.info(`Chat agent initialized with ${tools.length} MCP tools`);
 
